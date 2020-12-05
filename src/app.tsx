@@ -19,6 +19,7 @@ export async function getInitialState(): Promise<{
   settings?: LayoutSettings;
   currentUser?: API.CurrentUser;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+  clientSideMenuFlag?: boolean | undefined;
 }> {
   const fetchUserInfo = async () => {
     try {
@@ -29,25 +30,36 @@ export async function getInitialState(): Promise<{
     }
     return undefined;
   };
+  let clientSideMenuFlag = false;
   // 如果是登录页面，不执行
   if (history.location.pathname !== '/user/login') {
     const currentUser = await fetchUserInfo();
+    if (history.location.pathname === '/b') {
+      clientSideMenuFlag = true;
+    }
     return {
       fetchUserInfo,
       currentUser,
       settings: defaultSettings,
+      clientSideMenuFlag,
     };
   }
   return {
     fetchUserInfo,
     settings: defaultSettings,
+    clientSideMenuFlag,
   };
 }
 
 export const layout = ({
   initialState,
+  setInitialState,
 }: {
-  initialState: { settings?: LayoutSettings; currentUser?: API.CurrentUser };
+  initialState: {
+    settings?: LayoutSettings;
+    currentUser?: API.CurrentUser;
+    clientSideMenuFlag?: boolean | undefined;
+  };
 }): BasicLayoutProps & {
   childrenRender?: (dom: JSX.Element) => React.ReactNode;
 } => {
@@ -62,6 +74,18 @@ export const layout = ({
       if (!currentUser && location.pathname !== '/user/login') {
         history.push('/user/login');
       }
+      // 动态生成menu
+      if (location.pathname === '/b') {
+        setInitialState({ ...initialState, clientSideMenuFlag: true });
+      } else {
+        setInitialState({ ...initialState, clientSideMenuFlag: false });
+      }
+    },
+    menuDataRender: (menuData) => {
+      if (initialState?.clientSideMenuFlag) {
+        return menuData.filter((item) => item.path !== '/a');
+      }
+      return menuData.filter((item) => item.path !== '/b');
     },
     menuHeaderRender: undefined,
     ...initialState?.settings,

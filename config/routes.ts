@@ -15,6 +15,7 @@
     name: 'welcome',
     icon: 'smile',
     component: './Welcome',
+    hideInMenu: true,
   },
   {
     path: '/admin',
@@ -22,6 +23,7 @@
     icon: 'crown',
     access: 'canAdmin',
     component: './Admin',
+    hideInMenu: true,
     routes: [
       {
         path: '/admin/sub-page',
@@ -36,10 +38,32 @@
     icon: 'table',
     path: '/list',
     component: './ListTableList',
+    hideInMenu: true,
+  },
+  {
+    path: '/my-page',
+    name: 'my-page',
+    icon: 'smile',
+    component: './MyPage',
+    hideInMenu: true,
+  },
+  {
+    path: '/a',
+    name: 'a',
+    icon: 'smile',
+    component: './ListTableList',
+    layout: 'top',
+  },
+  {
+    path: '/b',
+    name: 'b',
+    icon: 'smile',
+    component: './Admin',
+    layout: 'side',
   },
   {
     path: '/',
-    redirect: '/welcome',
+    redirect: '/my-page',
   },
   {
     component: './404',

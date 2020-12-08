@@ -71,9 +71,45 @@ export const layout = ({
       }
       // 动态生成menu
       if (location.pathname === '/b') {
-        setInitialState({...initialState, clientSideMenuFlag: true,})
+        setInitialState({
+          ...initialState,
+          settings: {
+            menu: {
+              loading: true,
+            },
+          },
+        });
+        Promise.resolve(true).then((res) => {
+          setInitialState({
+            ...initialState,
+            clientSideMenuFlag: res,
+            settings: {
+              menu: {
+                loading: false,
+              },
+            },
+          });
+        })
       } else {
-        setInitialState({...initialState, clientSideMenuFlag: false,})
+        setInitialState({
+          ...initialState,
+          settings: {
+            menu: {
+              loading: true,
+            },
+          },
+        });
+        Promise.resolve(false).then((res) => {
+          setInitialState({
+            ...initialState,
+            clientSideMenuFlag: res,
+            settings: {
+              menu: {
+                loading: false,
+              },
+            },
+          });
+        })
       }
     },
     menuDataRender: (menuData => {
